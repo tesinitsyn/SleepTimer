@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct SleepTimerApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+        
+        var body: some Scene {
+            Settings {
+                ContentView()
+            }
         }
-    }
 }
