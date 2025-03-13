@@ -7,26 +7,43 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct SettingsView: View {
-    @AppStorage("muteTimer") private var muteTimer = 0
-    @AppStorage("sleepTimer") private var sleepTimer = 0
+    @AppStorage("muteEnabled") private var muteEnabled = false
+    @AppStorage("muteTimer") private var muteTimer = 10  // 🔥 Шаги кратны 5
+
+    @AppStorage("sleepEnabled") private var sleepEnabled = false
+    @AppStorage("sleepTimer") private var sleepTimer = 60  // 🔥 Шаги кратны 5
 
     var body: some View {
         ZStack {
             VisualEffectBlur(material: .fullScreenUI, blendingMode: .behindWindow)
                 .edgesIgnoringSafeArea(.all)
             
-            VStack(spacing: 20) {  // Increased spacing
+            VStack(spacing: 20) {
                 Text("Settings")
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(.primary)
                     .padding(.top, 10)
-                
-                settingsCard(icon: "speaker.slash.fill", label: "Mute After", value: $muteTimer)
-                settingsCard(icon: "moon.fill", label: "Sleep After", value: $sleepTimer)
+
+                settingsToggle(icon: "speaker.slash.fill", label: "Mute After", isOn: $muteEnabled, value: $muteTimer)
+                settingsToggle(icon: "moon.fill", label: "Sleep After", isOn: $sleepEnabled, value: $sleepTimer)
 
                 Button(action: {
-                    TimerManager.shared.applyTimers()
+                    // Сохраняем настройки
+                    UserDefaults.standard.set(sleepEnabled, forKey: "sleepEnabled")
+                    UserDefaults.standard.set(sleepTimer, forKey: "sleepTimer")
+                    UserDefaults.standard.set(muteEnabled, forKey: "muteEnabled")
+                    UserDefaults.standard.set(muteTimer, forKey: "muteTimer")
+
+                    // Запускаем таймеры
+                    TimerManager.shared.applyTimers(startTimer: sleepEnabled || muteEnabled)
+                    
+                    // 🔥 Обновляем меню-бар сразу после изменения настроек
+                    DispatchQueue.main.async {
+                        TimerManager.shared.updateMenuBarTimer()
+                    }
                 }) {
                     Text("Save & Apply")
                         .frame(maxWidth: .infinity)
@@ -38,9 +55,10 @@ struct SettingsView: View {
                 .buttonStyle(PlainButtonStyle())
                 .padding(.horizontal, 15)
                 .padding(.top, 10)
+
             }
             .padding(20)
-            .frame(width: 300, height: 300)  // 🔥 Increased size
+            .frame(width: 500, height: 500)
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .withinWindow)
                     .clipShape(RoundedRectangle(cornerRadius: 18))
@@ -49,28 +67,49 @@ struct SettingsView: View {
         }
     }
     
-    private func settingsCard(icon: String, label: String, value: Binding<Int>) -> some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.accentColor)
-                .font(.system(size: 18, weight: .medium)) // Increased icon size
+    private func settingsToggle(icon: String, label: String, isOn: Binding<Bool>, value: Binding<Int>) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(isOn.wrappedValue ? .accentColor : .gray)
+                    .font(.system(size: 18, weight: .medium))
+
+                Text(label)
+                    .font(.system(size: 16))
+                    .foregroundColor(.primary)
+
+                Spacer()
+
+                Toggle("", isOn: isOn)
+                    .toggleStyle(SwitchToggleStyle()) // 🔥 macOS-style toggle
+            }
             
-            Text(label)
-                .font(.system(size: 16))
-                .foregroundColor(.primary)
-            
-            Spacer()
-            
-            Stepper("", value: value, in: 0...120)
-                .labelsHidden()
-                .frame(width: 80)  // More space for Stepper
+            if isOn.wrappedValue {
+                VStack {
+                    Text("\(value.wrappedValue) min")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.gray)
+                        .animation(.easeInOut, value: value.wrappedValue)
+
+                    Slider(value: Binding(get: {
+                        Double(value.wrappedValue)
+                    }, set: { newValue in
+                        value.wrappedValue = Int(newValue)
+                    }), in: 5...120, step: 5) // 🔥 Шаг 5 минут
+                    .accentColor(.accentColor)
+                    .padding(.horizontal, 8)
+                }
+            }
         }
         .padding()
         .frame(maxWidth: .infinity)
         .background(RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.08)))
         .shadow(radius: 2)
+        .animation(.easeInOut(duration: 0.3), value: isOn.wrappedValue)
     }
 }
+
+
 
 
 
