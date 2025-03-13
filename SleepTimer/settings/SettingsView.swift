@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct SettingsView: View {
     @AppStorage("muteEnabled") private var muteEnabled = false
@@ -15,7 +16,7 @@ struct SettingsView: View {
     @AppStorage("sleepTimer") private var sleepTimer = 60
 
     @Environment(\.colorScheme) var colorScheme
-    @State private var buttonScale: CGFloat = 1.0  // 🔥 Анимация кнопки
+    @State private var buttonScale: CGFloat = 1.0
 
     var body: some View {
         VStack(spacing: 20) {
@@ -66,7 +67,7 @@ struct SettingsView: View {
             .buttonStyle(PlainButtonStyle())
             .padding(.horizontal, 15)
             .padding(.top, 10)
-            .animation(.easeOut, value: buttonScale)  // 🔥 Анимация эффекта нажатия
+            .animation(.easeOut, value: buttonScale)
 
         }
         .padding(20)
@@ -84,7 +85,6 @@ struct SettingsView: View {
     }
 }
 
-// ✅ Теперь с анимацией появления элементов
 private func settingsToggle(icon: String, label: String, isOn: Binding<Bool>, value: Binding<Int>, colorScheme: ColorScheme) -> some View {
     VStack(alignment: .leading, spacing: 8) {
         HStack {
@@ -99,25 +99,18 @@ private func settingsToggle(icon: String, label: String, isOn: Binding<Bool>, va
             Spacer()
 
             Toggle("", isOn: isOn)
-                .toggleStyle(SwitchToggleStyle()) // 🔥 macOS-style toggle
-                .animation(.easeInOut(duration: 0.3), value: isOn.wrappedValue)  // 🔥 Плавная анимация переключения
+                .toggleStyle(SwitchToggleStyle())
         }
-        
+
         if isOn.wrappedValue {
             VStack {
                 Text("\(value.wrappedValue) min")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.gray)
-                    .transition(.opacity.combined(with: .scale)) // 🔥 Анимация текста
 
-                Slider(value: Binding(get: {
-                    Double(value.wrappedValue)
-                }, set: { newValue in
-                    value.wrappedValue = Int(newValue)
-                }), in: 5...120, step: 5)
-                .accentColor(.accentColor)
-                .padding(.horizontal, 8)
-                .transition(.opacity.combined(with: .scale)) // 🔥 Анимация появления слайдера
+                AppKitSlider(value: value, minValue: 5, maxValue: 120, step: 5)
+                    .frame(height: 20)
+                    .padding(.horizontal, 8)
             }
             .padding(.top, 5)
         }
@@ -133,10 +126,57 @@ private func settingsToggle(icon: String, label: String, isOn: Binding<Bool>, va
             }
         }
     )
-    .shadow(color: colorScheme == .dark ? .black.opacity(0.2) : .clear, radius: 0)
-    .animation(.easeInOut(duration: 0.3), value: isOn.wrappedValue)
 }
 
+
+struct AppKitSlider: NSViewRepresentable {
+    @Binding var value: Int
+    let minValue: Int
+    let maxValue: Int
+    let step: Int
+
+    class Coordinator: NSObject {
+        var parent: AppKitSlider
+
+        init(_ parent: AppKitSlider) {
+            self.parent = parent
+        }
+
+        @objc func valueChanged(_ sender: NSSlider) {
+            let newValue = round(sender.doubleValue / Double(parent.step)) * Double(parent.step)
+            parent.value = Int(newValue)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    func makeNSView(context: Context) -> NSSlider {
+        let slider = NSSlider(value: Double(value),
+                              minValue: Double(minValue),
+                              maxValue: Double(maxValue),
+                              target: context.coordinator,
+                              action: #selector(Coordinator.valueChanged(_:)))
+
+        slider.isContinuous = true
+        slider.allowsTickMarkValuesOnly = false
+        slider.numberOfTickMarks = (maxValue - minValue) / step + 1
+        slider.focusRingType = .none
+        slider.controlSize = .regular
+        slider.trackFillColor = NSColor.controlAccentColor 
+
+        DispatchQueue.main.async {
+            slider.window?.makeFirstResponder(slider)
+        }
+
+        return slider
+    }
+
+    func updateNSView(_ nsView: NSSlider, context: Context) {
+        nsView.doubleValue = Double(value)
+    }
+}
 #Preview {
     SettingsView()
 }
