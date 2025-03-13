@@ -11,6 +11,13 @@ Built with **SwiftUI & AppKit**, this app integrates seamlessly into macOS, ensu
 
 ---
 
+## Screenshots
+| Light Mode | Dark Mode |
+|------------|------------|
+| ![Light Mode UI](https://github.com/user-attachments/assets/03126278-700b-4233-94e5-9f76719d6649) | ![Dark Mode UI](https://github.com/user-attachments/assets/eaeea07a-4084-4457-8234-0991e96e89f8) |
+
+---
+
 ## Features
 ✅ **Mute Audio Timer** – Set a timer to automatically mute your Mac's audio.  
 ✅ **Sleep Timer** – Schedule your Mac to go to sleep after a specified time.  
@@ -52,15 +59,6 @@ Built with **SwiftUI & AppKit**, this app integrates seamlessly into macOS, ensu
 ### 3️⃣ Manually Putting Mac to Sleep
 - Select **Sleep Now** from the menu bar for immediate sleep.
 
----
-
-## Screenshots
-| Light Mode | Dark Mode |
-|------------|------------|
-| ![Light Mode UI](https://github.com/user-attachments/assets/03126278-700b-4233-94e5-9f76719d6649) | ![Dark Mode UI](https://github.com/user-attachments/assets/eaeea07a-4084-4457-8234-0991e96e89f8) |
-
-
----
 
 ## Technical Details
 ### Tech Stack:
