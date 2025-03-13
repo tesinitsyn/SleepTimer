@@ -16,11 +16,6 @@
 			path = SleepTimer;
 			sourceTree = "<group>";
 		};
-		F2F4A31F2D83660D00CE506A /* utility */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = utility;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,7 +33,6 @@
 			isa = PBXGroup;
 			children = (
 				F2F4A2E02D83214000CE506A /* SleepTimer */,
-				F2F4A31F2D83660D00CE506A /* utility */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,7 +53,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				F2F4A2E02D83214000CE506A /* SleepTimer */,
-				F2F4A31F2D83660D00CE506A /* utility */,
 			);
 			name = SleepTimer;
 			packageProductDependencies = (

@@ -16,19 +16,19 @@ class TimerManager {
     private var sleepTimer: Timer?
     private var cancelSleep = false
 
-    private let isDebugMode = true // 🔥 Включаем тестовый режим
+    private let isDebugMode = false
 
     func putToSleep() {
         let sleepDelay = UserDefaults.standard.integer(forKey: "sleepTimer") * 60
 
-        let adjustedSleepDelay = isDebugMode ? max(sleepDelay / 60, 1) : sleepDelay // 🔥 Минимальное время 1 сек
-        let warningTime = isDebugMode ? 5 : 300 // 🔥 5 секунд вместо 5 минут в тесте
+        let adjustedSleepDelay = isDebugMode ? max(sleepDelay / 60, 1) : sleepDelay
+        let warningTime = isDebugMode ? 5 : 300
 
         print("⏳ Таймер установлен на \(adjustedSleepDelay) секунд")
 
         if adjustedSleepDelay > 0 {
-            showNotification(title: "Mac will sleep in \(adjustedSleepDelay) sec",
-                             body: "A warning will appear in \(warningTime) sec.")
+            showNotification(title: "Mac will sleep in \(adjustedSleepDelay / 60) minutes",
+                             body: "A warning will appear in \(warningTime / 60) minutes")
 
             if adjustedSleepDelay > warningTime {
                 print("⚠️ Устанавливаем предупреждение за 5 минут")
@@ -79,7 +79,7 @@ class TimerManager {
         
         DispatchQueue.main.async {
             if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
-                appDelegate.updateMenuBarTimer() // 🔥 Обновляем меню-бар внутри applyTimers()
+                appDelegate.updateMenuBarTimer()
             } else {
                 print("⚠️ Ошибка: AppDelegate не найден, меню-бар не обновлён")
             }
@@ -90,7 +90,7 @@ class TimerManager {
 
     func muteAfterDelay() {
         let muteDelay = UserDefaults.standard.integer(forKey: "muteTimer") * 60
-        let warningTime = 15 // 🔥 Уведомление за 5 секунд до отключения звука
+        let warningTime = 15
 
         if muteDelay > 0 {
             print("🔇 Устанавливаем таймер на выключение звука через \(muteDelay) секунд")
@@ -98,7 +98,6 @@ class TimerManager {
             showNotification(title: "Sound will mute in \(muteDelay / 60) min",
                              body: "A warning will appear 5 sec before muting.")
 
-            // Уведомление за 5 секунд до mute
             if muteDelay > warningTime {
                 DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(muteDelay - warningTime)) { [weak self] in
                     if !(self?.cancelSleep ?? false) {
@@ -107,7 +106,6 @@ class TimerManager {
                 }
             }
 
-            // Таймер для mute
             DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(muteDelay)) { [weak self] in
                 if !(self?.cancelSleep ?? false) {
                     self?.muteAudio()
@@ -161,8 +159,7 @@ class TimerManager {
         content.title = title
         content.body = body
         content.sound = .default
-        content.interruptionLevel = .timeSensitive // 🔥 Теперь уведомление всегда будет видно
-
+        content.interruptionLevel = .timeSensitive
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
@@ -190,7 +187,7 @@ class TimerManager {
 
         showNotification(title: "All Timers Cancelled", body: "Sleep and mute timers have been stopped.")
         
-        updateMenuBarTimer() // 🔥 Теперь обновляем меню-бар при отмене всех таймеров
+        updateMenuBarTimer()
     }
 
 

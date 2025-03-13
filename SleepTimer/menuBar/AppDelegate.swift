@@ -19,23 +19,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         requestNotificationPermissions()
         registerNotificationActions()
         
-        TimerManager.shared.appDelegate = self // 🔥 Теперь TimerManager знает AppDelegate
+        TimerManager.shared.appDelegate = self
     }
 
     
     func registerNotificationActions() {
         let center = UNUserNotificationCenter.current()
-        center.delegate = self  // 🔥 Назначаем AppDelegate обработчиком
+        center.delegate = self
 
-        // ✅ Действие "Отмена" для сна
         let cancelSleepAction = UNNotificationAction(identifier: "CANCEL_SLEEP", title: "Cancel Sleep", options: [.destructive])
         let sleepCategory = UNNotificationCategory(identifier: "SLEEP_WARNING", actions: [cancelSleepAction], intentIdentifiers: [], options: [])
 
-        // ✅ Действие "Отмена" для отключения звука
         let cancelMuteAction = UNNotificationAction(identifier: "CANCEL_MUTE", title: "Cancel Mute", options: [.destructive])
         let muteCategory = UNNotificationCategory(identifier: "MUTE_WARNING", actions: [cancelMuteAction], intentIdentifiers: [], options: [])
 
-        // ✅ Регистрируем категории уведомлений
         center.setNotificationCategories([sleepCategory, muteCategory])
 
         print("✅ Действия уведомлений зарегистрированы")
@@ -72,7 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
 
         let cancelAllItem = NSMenuItem(title: "Cancel All Timers",
-                                       action: #selector(cancelAllTimers), keyEquivalent: "C") // 🔥 Клавиша "C" для отмены всех таймеров
+                                       action: #selector(cancelAllTimers), keyEquivalent: "C")
         cancelAllItem.tag = 102
         menu.addItem(cancelAllItem)
 
@@ -87,28 +84,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func cancelAllTimers() {
         TimerManager.shared.cancelAllTimers()
-        updateMenuBarTimer() // 🔥 Обновляем меню-бар после отмены таймеров
+        updateMenuBarTimer()
     }
 
 
 
     @objc func putToSleep() {
-        TimerManager.shared.applyTimers(startTimer: true) // 🔥 Запускаем таймер только при явном нажатии
+        TimerManager.shared.applyTimers(startTimer: true)
     }
 
 
     func updateMenuBarTimer() {
         DispatchQueue.main.async {
-            // ✅ Удаляем старый `statusItem`
             if let oldItem = self.statusItem {
                 NSStatusBar.system.removeStatusItem(oldItem)
             }
 
-            // ✅ Создаём новый `statusItem`
             self.statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
             self.statusItem?.button?.image = NSImage(systemSymbolName: "speaker.wave.2", accessibilityDescription: "Sound Control")
 
-            // ✅ Создаём новое меню
             let menu = NSMenu()
             
             let sleepTime = UserDefaults.standard.integer(forKey: "sleepTimer")
@@ -132,7 +126,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(NSMenuItem(title: "Settings", action: #selector(self.openSettings), keyEquivalent: ","))
             menu.addItem(NSMenuItem(title: "Quit", action: #selector(self.quitApp), keyEquivalent: "Q"))
 
-            // ✅ Привязываем новое меню к новому `statusItem`
             self.statusItem?.menu = menu
         }
     }
