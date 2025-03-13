@@ -18,8 +18,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         TimerManager.shared.applyTimers(startTimer: false)
         requestNotificationPermissions()
         registerNotificationActions()
-        UNUserNotificationCenter.current().delegate = self // ✅ Устанавливаем обработчик
+        
+        TimerManager.shared.appDelegate = self // 🔥 Теперь TimerManager знает AppDelegate
     }
+
     
     func registerNotificationActions() {
         let center = UNUserNotificationCenter.current()
@@ -96,18 +98,47 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
     func updateMenuBarTimer() {
-        if let menu = statusItem?.menu {
-            if let sleepItem = menu.item(withTag: 100) {
-                let sleepTime = UserDefaults.standard.integer(forKey: "sleepTimer")
-                sleepItem.title = "Sleep in \(sleepTime) min"
+        DispatchQueue.main.async {
+            // ✅ Удаляем старый `statusItem`
+            if let oldItem = self.statusItem {
+                NSStatusBar.system.removeStatusItem(oldItem)
             }
+
+            // ✅ Создаём новый `statusItem`
+            self.statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+            self.statusItem?.button?.image = NSImage(systemSymbolName: "speaker.wave.2", accessibilityDescription: "Sound Control")
+
+            // ✅ Создаём новое меню
+            let menu = NSMenu()
             
-            if let muteItem = menu.item(withTag: 101) {
-                let muteTime = UserDefaults.standard.integer(forKey: "muteTimer")
-                muteItem.title = "Mute in \(muteTime) min"
-            }
+            let sleepTime = UserDefaults.standard.integer(forKey: "sleepTimer")
+            let muteTime = UserDefaults.standard.integer(forKey: "muteTimer")
+
+            let muteItem = NSMenuItem(title: "Mute in \(muteTime) min",
+                                      action: #selector(self.startMuteTimer), keyEquivalent: "M")
+            menu.addItem(muteItem)
+
+            let sleepItem = NSMenuItem(title: "Sleep in \(sleepTime) min",
+                                       action: #selector(self.putToSleep), keyEquivalent: "S")
+            menu.addItem(sleepItem)
+
+            menu.addItem(NSMenuItem.separator())
+
+            let cancelAllItem = NSMenuItem(title: "Cancel All Timers",
+                                           action: #selector(self.cancelAllTimers), keyEquivalent: "C")
+            menu.addItem(cancelAllItem)
+
+            menu.addItem(NSMenuItem.separator())
+            menu.addItem(NSMenuItem(title: "Settings", action: #selector(self.openSettings), keyEquivalent: ","))
+            menu.addItem(NSMenuItem(title: "Quit", action: #selector(self.quitApp), keyEquivalent: "Q"))
+
+            // ✅ Привязываем новое меню к новому `statusItem`
+            self.statusItem?.menu = menu
         }
     }
+
+
+
     
     @objc func startMuteTimer() {
         TimerManager.shared.applyTimers(startTimer: true)

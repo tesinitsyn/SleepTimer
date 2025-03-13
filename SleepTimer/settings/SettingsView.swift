@@ -31,19 +31,24 @@ struct SettingsView: View {
                 settingsToggle(icon: "moon.fill", label: "Sleep After", isOn: $sleepEnabled, value: $sleepTimer)
 
                 Button(action: {
-                    // Сохраняем настройки
+                    // ✅ Сохраняем настройки
                     UserDefaults.standard.set(sleepEnabled, forKey: "sleepEnabled")
                     UserDefaults.standard.set(sleepTimer, forKey: "sleepTimer")
                     UserDefaults.standard.set(muteEnabled, forKey: "muteEnabled")
                     UserDefaults.standard.set(muteTimer, forKey: "muteTimer")
 
-                    // Запускаем таймеры
+                    // ✅ Запускаем таймеры
                     TimerManager.shared.applyTimers(startTimer: sleepEnabled || muteEnabled)
-                    
-                    // 🔥 Обновляем меню-бар сразу после изменения настроек
+
+                    // ✅ Теперь обновляем меню-бар через appDelegate
                     DispatchQueue.main.async {
-                        TimerManager.shared.updateMenuBarTimer()
+                        if let appDelegate = TimerManager.shared.appDelegate {
+                            appDelegate.updateMenuBarTimer()
+                        } else {
+                            print("⚠️ Ошибка: AppDelegate не найден в TimerManager")
+                        }
                     }
+
                 }) {
                     Text("Save & Apply")
                         .frame(maxWidth: .infinity)

@@ -12,6 +12,7 @@ import Cocoa
 
 class TimerManager {
     static let shared = TimerManager()
+    weak var appDelegate: AppDelegate?
     private var sleepTimer: Timer?
     private var cancelSleep = false
 
@@ -76,8 +77,15 @@ class TimerManager {
             print("⏳ Таймеры НЕ запущены автоматически при старте приложения.")
         }
         
-        updateMenuBarTimer() // 🔥 Теперь обновляем меню-бар при каждом изменении таймеров
+        DispatchQueue.main.async {
+            if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
+                appDelegate.updateMenuBarTimer() // 🔥 Обновляем меню-бар внутри applyTimers()
+            } else {
+                print("⚠️ Ошибка: AppDelegate не найден, меню-бар не обновлён")
+            }
+        }
     }
+
 
 
     func muteAfterDelay() {
