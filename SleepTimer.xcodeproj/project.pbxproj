@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		F2F4A2DE2D83214000CE506A /* SleepTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SleepTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2F4A2DE2D83214000CE506A /* SleepTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = SleepTimer.app; path = /Users/tesinitsyn/Documents/SleepTimer/build/Debug/SleepTimer.app; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F2F4A2E02D83214000CE506A /* SleepTimer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SleepTimer;
+			sourceTree = "<group>";
+		};
+		F2F4A31F2D83660D00CE506A /* utility */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = utility;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +38,8 @@
 			isa = PBXGroup;
 			children = (
 				F2F4A2E02D83214000CE506A /* SleepTimer */,
-				F2F4A2DF2D83214000CE506A /* Products */,
+				F2F4A31F2D83660D00CE506A /* utility */,
 			);
-			sourceTree = "<group>";
-		};
-		F2F4A2DF2D83214000CE506A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F2F4A2DE2D83214000CE506A /* SleepTimer.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -62,6 +59,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				F2F4A2E02D83214000CE506A /* SleepTimer */,
+				F2F4A31F2D83660D00CE506A /* utility */,
 			);
 			name = SleepTimer;
 			packageProductDependencies = (
@@ -95,7 +93,7 @@
 			mainGroup = F2F4A2D52D83214000CE506A;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = F2F4A2DF2D83214000CE506A /* Products */;
+			productRefGroup = F2F4A2D52D83214000CE506A;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
