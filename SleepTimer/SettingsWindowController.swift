@@ -17,8 +17,11 @@ class SettingsWindowController: NSWindowController {
         
         let window = NSWindow(contentViewController: hostingController)
         window.title = "Settings"
-        window.setContentSize(NSSize(width: 300, height: 200))
-        window.styleMask = [.titled, .closable]
+        window.setContentSize(NSSize(width: 350, height: 220))
+        window.styleMask = [.titled, .closable, .fullSizeContentView]
+        window.isMovableByWindowBackground = true
+        window.backgroundColor = .clear
+        window.titleVisibility = .hidden
         super.init(window: window)
     }
 
@@ -26,3 +29,4 @@ class SettingsWindowController: NSWindowController {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

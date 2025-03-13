@@ -22,15 +22,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: "Mute", action: #selector(muteAudio), keyEquivalent: "M"))
         menu.addItem(NSMenuItem(title: "Unmute", action: #selector(unmuteAudio), keyEquivalent: "U"))
         menu.addItem(NSMenuItem(title: "Sleep", action: #selector(putToSleep), keyEquivalent: "S"))
-        
-        // Add Settings Window
-        menu.addItem(NSMenuItem(title: "Settings", action: #selector(openSettings), keyEquivalent: ","))
-        
+
+        // Settings with Icon
+        let settingsItem = NSMenuItem(title: "Settings", action: #selector(openSettings), keyEquivalent: ",")
+        menu.addItem(settingsItem)
+
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "Q"))
-        
+
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem?.button?.title = "🔊"
+        statusItem?.button?.image = NSImage(systemSymbolName: "speaker.wave.2", accessibilityDescription: "Sound Control")
         statusItem?.menu = menu
     }
 
