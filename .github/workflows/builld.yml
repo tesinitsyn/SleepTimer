@@ -34,4 +34,4 @@ jobs:
     - name: Set up Xcode version
       run: sudo xcode-select -s /Applications/Xcode_16.1.app/Contents/Developer
     - name: Build
-      run: ./build_release.sh
+      run: chmod +x ./build_release.sh
