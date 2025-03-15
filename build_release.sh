@@ -8,4 +8,4 @@
 
 SCHEME='SleepTimer'
 
-set -o pipefail && xcodebuild -configuration Release -scheme <YourScheme> -sdk macosx -destination 'platform=macOS' CODE_SIGNING_ALLOWED='NO'
+set -o pipefail && xcodebuild -configuration Release -scheme $SCHEME -sdk macosx -destination 'platform=macOS' CODE_SIGNING_ALLOWED='NO'
