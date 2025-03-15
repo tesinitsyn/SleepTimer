@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F2F4A3AC2D85FD3300CE506A /* build_release.sh in Resources */ = {isa = PBXBuildFile; fileRef = F2F4A3AB2D85FD2900CE506A /* build_release.sh */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		F2F4A2DE2D83214000CE506A /* SleepTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = SleepTimer.app; path = /Users/tesinitsyn/Documents/SleepTimer/build/Debug/SleepTimer.app; sourceTree = "<absolute>"; };
+		F2F4A3912D85FD0900CE506A /* SleepTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SleepTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2F4A3AB2D85FD2900CE506A /* build_release.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_release.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,6 +38,8 @@
 			isa = PBXGroup;
 			children = (
 				F2F4A2E02D83214000CE506A /* SleepTimer */,
+				F2F4A3912D85FD0900CE506A /* SleepTimer.app */,
+				F2F4A3AB2D85FD2900CE506A /* build_release.sh */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,7 +65,7 @@
 			packageProductDependencies = (
 			);
 			productName = SleepTimer;
-			productReference = F2F4A2DE2D83214000CE506A /* SleepTimer.app */;
+			productReference = F2F4A3912D85FD0900CE506A /* SleepTimer.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -100,6 +107,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2F4A3AC2D85FD3300CE506A /* build_release.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
